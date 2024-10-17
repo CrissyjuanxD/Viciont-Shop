@@ -1,0 +1,110 @@
+{% extends 'components/base.html' %}
+
+{% block content %}
+    <title>{% block title %}Listado de Menús{% endblock title %}</title>
+    <section class="dark:bg-principal mt-20 px-4 sm:px-6 lg:px-8">
+        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+            <h1 class="dark:text-white text-4xl text-center font-Tiny2 border-b-4 border-blue-500 pb-4">
+                Listado de Menús
+            </h1>
+        </div>
+
+        <!-- Formulario de búsqueda -->
+        <div class="mt-6">
+            <form method="GET" action="" class="flex justify-center mb-6">
+                <input type="text" name="q" placeholder="Buscar menús..." value="{{ query }}" class="border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white">
+                <button type="submit" class="bg-blue-500 text-white rounded-r-lg py-2 px-4 hover:bg-blue-600 transition-colors duration-300">Buscar</button>
+            </form>
+        </div>
+
+        <div class="grid gap-6 grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 mt-10">
+            {% for menu in page_obj %}
+            <div class="flex justify-center">
+                <div class="dark:bg-secundario w-full overflow-hidden rounded-2xl bg-white shadow-lg transition-transform transform hover:scale-105">
+                    <div class="text-center p-6">
+                        <h2 class="dark:text-blue-400 text-2xl font-bold uppercase mb-4">
+                            {{ menu.name }}
+                        </h2>
+                        <div class="p-4 mb-4">
+                            <i class="{{ menu.get_icon }} text-4xl text-purple-800 dark:text-purple-500"></i>
+                        </div>
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+                            <a href="{% url 'security:menu_update' menu.pk %}" class="border border-transparent bg-blue-500 hover:bg-mint-green text-white py-2 px-4 rounded-full transition-colors duration-300">
+                                <i class="fa-solid fa-gear text-white hover:text-mint-green mr-2"></i> Editar
+                            </a>
+                            <button class="border border-transparent bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-full transition-colors duration-300" onclick="openDeleteModal('{{ menu.pk }}', '{{ menu.name }}')">
+                                <i class="fa-solid fa-trash text-white hover:text-mint-green mr-2"></i> Eliminar
+                            </button>
+                            <noscript>
+                                <a href="{% url 'security:menu_delete' menu.pk %}" class="border border-transparent bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-full transition-colors duration-300">
+                                    <i class="fa-solid fa-trash text-white hover:text-mint-green mr-2"></i> Eliminar
+                                </a>
+                            </noscript>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Paginación -->
+        <div class="mt-8">
+            <nav class="flex justify-center">
+                <ul class="inline-flex items-center -space-x-px">
+                    {% if page_obj.has_previous %}
+                    <li>
+                        <a href="?page=1{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700">Primero</a>
+                    </li>
+                    <li>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li aria-current="page">
+                        <span class="px-3 py-2 leading-tight text-blue-600 bg-blue-50 border border-gray-300">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li>
+                        <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li>
+                        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Siguiente</a>
+                    </li>
+                    <li>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700">Último</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-center gap-4 mt-10">
+            <a class="border border-transparent bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full transition-colors duration-300" href="{% url 'security:menu_create' %}">
+                <i class="fa-solid fa-plus text-white hover:text-mint-green mr-2"></i> Nuevo Menú
+            </a>
+            <a class="border border-transparent bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full transition-colors duration-300" href="{% url 'home' %}">
+                <i class="fa-solid fa-house text-white hover:text-mint-green"></i>
+            </a>
+        </div>
+    </section>
+
+    {% include 'security/delete.html' %}
+    <script>
+        function openDeleteModal(id, description) {
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.action = `{% url 'security:menu_delete' 0 %}`.replace('0', id);
+            document.getElementById('Description').textContent = description;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+    </script>
+{% endblock %}

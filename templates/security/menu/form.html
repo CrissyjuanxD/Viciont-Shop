@@ -1,0 +1,68 @@
+{% extends 'components/base.html' %}
+{% block content %}
+    <title>{% block title %} {{ title1 }} {% endblock title %}</title>
+    <section class="dark:bg-principal mt-20 h-screen flex justify-center items-center">
+        <div class="max-w-screen-lg bg-white dark:bg-secundario rounded-lg shadow-lg p-6 space-y-6">
+            <div class="text-center" data-aos="fade" data-aos-delay="200">
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                            AGREGAR MENU
+                        </span>
+                    </div>
+                    <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+                        {{ title2 }}
+                    </h1>
+                    <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+                        Complete el formulario para guardar un nuevo módulo.
+                    </p>
+                </div>
+                <div class="flex justify-center mt-8">
+                    <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 gap-6">
+                        {% csrf_token %}
+                        <div class="flex flex-col">
+                            <label for="{{ form.name.id_for_label }}"
+                                class="dark:text-blue-300 font-black uppercase text-lg mb-1">{{ form.name.label }}</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="{{ form.url.id_for_label }}"
+                                class="dark:text-blue-300 font-black uppercase text-lg mb-1">{{ form.url.label }}</label>
+                            {{ form.url }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="{{ form.icon.id_for_label }}"
+                                class="dark:text-blue-300 font-black uppercase text-lg mb-1">{{ form.icon.label }}</label>
+                            {{ form.icon }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="{{ form.is_active.id_for_label }}"
+                                class="dark:text-blue-300 font-black uppercase text-lg mb-1">{{ form.is_active.label }}</label>
+                            {{ form.is_active }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="{{ form.description.id_for_label }}"
+                                class="dark:text-blue-300 font-black uppercase text-lg mb-1">{{ form.description.label }}</label>
+                            {{ form.description }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="{{ form.permissions.id_for_label }}"
+                                class="dark:text-blue-300 font-black uppercase text-lg mb-1">{{ form.permissions.label }}</label>
+                            {{ form.permissions }}
+                        </div>
+                        <!-- Botones de acción -->
+                        <div class="flex justify-center items-center mt-6">
+                            <button type="submit"
+                                class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center">
+                                <i class="fa-solid fa-save mr-2"></i>Guardar
+                            </button>
+                            <a class="ml-4 bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-full flex items-center"
+                                href="{% url 'security:module_list' %}">
+                                <i class="fa-solid fa-xmark mr-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

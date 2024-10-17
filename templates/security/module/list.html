@@ -1,0 +1,110 @@
+{% extends 'components/base.html' %}
+
+{% block content %}
+    <title>{% block title %}Listado de Módulos{% endblock title %}</title>
+    <section class="dark:bg-principal mt-20 px-4 sm:px-6 lg:px-8">
+        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+            <h1 class="dark:text-white text-4xl mt-16 mb-8 font-Tiny2 border-b-4 border-blue-500 pb-4">
+                Listado de Módulos
+            </h1>
+        </div>
+        
+        <!-- Formulario de búsqueda -->
+        <div class="mt-6">
+            <form method="GET" action="" class="flex justify-center mb-6">
+                <input type="text" name="q" placeholder="Buscar módulos..." value="{{ query }}" class="border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-white">
+                <button type="submit" class="bg-blue-500 text-white rounded-r-lg py-2 px-4 hover:bg-blue-600 transition-colors duration-300">Buscar</button>
+            </form>
+        </div>
+
+        <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 mt-6">
+            {% for module in page_obj %}
+            <div class="flex justify-center mb-4">
+                <div class="dark:bg-secundario w-full overflow-hidden rounded-lg bg-white shadow-md transition-transform transform hover:scale-105">
+                    <div class="text-center p-6">
+                        <h1 class="dark:text-blue-400 text-2xl font-bold uppercase mb-4">
+                            {{ module.name }}
+                        </h1>
+                        <div class="p-4">
+                            <i class="{{ module.get_icon }} text-4xl text-purple-600"></i>
+                        </div>
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4">
+                            <a href="{% url 'security:module_update' module.pk %}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full flex items-center transition-colors duration-300">
+                                <i class="fa-solid fa-gear text-white hover:text-mint-green mr-2"></i> Editar
+                            </a>
+                            <button class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-full flex items-center transition-colors duration-300" onclick="openDeleteModal('{{ module.pk }}', '{{ module.name }}')">
+                                <i class="fa-solid fa-trash text-white hover:text-mint-green mr-2"></i> Eliminar
+                            </button>
+                            <noscript>
+                                <a href="{% url 'security:module_delete' module.pk %}" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-full flex items-center transition-colors duration-300">
+                                    <i class="fa-solid fa-trash text-white hover:text-mint-green mr-2"></i> Eliminar
+                                </a>
+                            </noscript>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginación -->
+        <div class="mt-8">
+            <nav class="flex justify-center">
+                <ul class="inline-flex items-center -space-x-px">
+                    {% if page_obj.has_previous %}
+                    <li>
+                        <a href="?page=1{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700">Primero</a>
+                    </li>
+                    <li>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li aria-current="page">
+                        <span class="px-3 py-2 leading-tight text-blue-600 bg-blue-50 border border-gray-300">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li>
+                        <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li>
+                        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Siguiente</a>
+                    </li>
+                    <li>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700">Último</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-center gap-4 mt-6">
+            <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center transition-colors duration-300" href="{% url 'security:module_create' %}">
+                <i class="fa-solid fa-plus text-white hover:text-mint-green mr-2"></i> Nuevo Módulo
+            </a>
+            <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center transition-colors duration-300" href="{% url 'home' %}">
+                <i class="fa-solid fa-house text-white hover:text-mint-green"></i>
+            </a>
+        </div>
+    </section>
+
+    {% include 'security/delete.html' %}
+    <script>
+        function openDeleteModal(id, description) {
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.action = `{% url 'security:module_delete' 0 %}`.replace('0', id);
+            document.getElementById('Description').textContent = description;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+    </script>
+{% endblock %}

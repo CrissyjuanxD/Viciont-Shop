@@ -1,0 +1,516 @@
+{% extends 'components/base.html' %}
+{% load static %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+{% block content %}
+<section>
+    <!---SECCION DEL MODADL DEL INICIO DE LOS USUARIOS-->
+    {% if not user.is_authenticated %}
+    <div id="modal-home" class="fixed inset-0 flex items-center justify-center z-50 bg-cover bg-center bg-no-repeat">
+        <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+        <div class="bg-primary dark:bg-principal bg-white mx-4 my-4 p-4 sm:mx-8 sm:my-8 sm:p-6 md:mx-10 md:my-10 md:p-8 lg:mx-12 lg:my-12 lg:p-10 xl:mx-16 xl:my-16 xl:p-12 rounded-2xl z-10 max-w-7xl w-full">
+            <div class="bg-primary dark:bg-principal text-center P-10">
+                <h2 class="text-4xl md:text-3xl text-blue-700 dark:text-blue-300 uppercase font-black my-2">PERFILES</h2>
+                <p class="text-secondary text-gray500 dark:text-gray-400">Selecciona tu perfil para iniciar sesión:</p>
+                <a href="/" class="flex flex-col text-center items-center m-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+                    <img src="{% static 'img/iguana_corporation.png' %}" class="w-14" alt="Iguanas Corp." />
+                    <h2 class="text-4xl md:text-3xl text-green-700 dark:text-green-300 font-black my-2">CUCHO-STORE</h2>
+
+
+
+                </a>
+                <p class="text-secondary text-gray500 dark:text-gray-400">Accede a funcionalidades específicas.</p><br>
+                <div class="grid gap-6 sm:gap-8 md:gap-10 lg:grid-cols-3 rounded-3xl">
+                    <div
+                        class="bg-slate-100 dark:bg-secundario rounded-3xl p-6 md:p-8 custom-transform flex flex-col justify-between">
+                        <div class="flex-grow">
+                            <i class="fas fa-user text-3xl md:text-4xl text-indigo-500 mb-4"></i>
+                            <h2 class="text-2xl text-indigo-500 uppercase font-black my-2">
+                                Cliente</h2>
+                            <p class="text-secondary text-gray500 dark:text-gray-400">Da gestión de seguimiento a tus compras y ventas.
+                            </p>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a class="inline-flex items-center justify-center px-5 py-3 mr-3 font-medium text-center text-white rounded-lg bg-indigo-500  hover:bg-indigo-800  focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                                href="{% url 'security:auth_login' %}" id="btnCliente">Ingresar</a>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-slate-100 dark:bg-secundario rounded-3xl p-6 md:p-8 custom-transform flex flex-col justify-between">
+                        <div class="flex-grow">
+                            <i class="fas fa-user-tie text-3xl md:text-4xl text-orange-500 mb-4"></i>
+                            <h2 class="text-2xl text-orange-500 uppercase font-black my-2">
+                                Administrador</h2>
+                            <p class="text-secondary text-gray500 dark:text-gray-400">Gestiona las categorías, marcas y proveedores de
+                                tus
+                                productos.</p>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a class="inline-flex items-center justify-center px-5 py-3 mr-3 font-medium text-center text-white rounded-lg bg-orange-500 hover:bg-orange-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                                href="{% url 'security:auth_login' %}" id="btnAdministrador">Ingresar</a>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-slate-100 dark:bg-secundario rounded-3xl p-6 md:p-8 custom-transform flex flex-col justify-between">
+                        <div class="flex-grow">
+                            <i
+                                class="fas fa-user-secret text-3xl md:text-4xl text-green-500 mb-4"></i>
+                            <h2 class="text-2xl text-green-500 uppercase font-black font-black my-2">
+                                Invitado</h2>
+                            <p class="text-secondary text-gray500 dark:text-gray-400">Revisa las diversas funciones de nuestro sistema.
+                            </p>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a class="inline-flex items-center justify-center px-5 py-3 mr-3 font-medium text-center text-white rounded-lg bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                                href="{% url 'home' %}" id="btnModoInvitado">Ingresar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <!-- CIERRE DEL MODAD DEL INICIO DEL LOS USUARIOS -->
+
+
+
+<!-- SECCIÓN DEL HERO -->
+<section id="hero-section" class="bg-slate-100 dark:bg-principal pt-16 hero-background bg-cover bg-center bg-no-repeat">
+    <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12" data-aos="fade-right" data-aos-delay="200">
+        <<div class="mr-auto place-self-center lg:col-span-7 p-2">
+            <h1 class="max-w-2xl mb-4 text-4xl font-black my-2 leading-none md:text-5xl xl:text-6xl dark:text-white">
+                Una solución para tu negocio.<br>
+                {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                <span class="text-secondary text-green-500 dark:text-green-300 text-3xl font-black my-2">Bienvenido, {{ user.username }}.</span>
+                {% else %}
+                <span class="text-secondary text-green-500 dark:text-green-300 text-3xl font-black my-2">Bienvenido, {{ user.username }}.</span>
+                {% endif %}
+                {% else %}
+                <span class="text-secondary text-green-500 dark:text-green-300 text-3xl font-black my-2">Bienvenido, usuario anónimo.</span>
+                {% endif %}
+            </h1>
+        
+            <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+                ¡Explora nuestro increíble sistema!<br>Te invitamos a descubrir un mundo de múltiples posibilidades y beneficios, con el objetivo de optimizar tu emprendimiento al siguiente nivel.
+            </p>
+            <a href="#herramientas" class="bg-navbar inline-flex items-center justify-center px-5 py-3 mr-3 text-center text-white rounded-lg bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 dark:focus:ring-green-700">
+                Explorar
+                <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+            <a href="#contact" class="bg-gray-200 dark:bg-secundario dark:border-gray-700 inline-flex items-center justify-center px-5 py-3 text-center border border-gray-300 rounded-lg hover:bg-gray-400 focus:ring-4 focus:ring-gray-100 dark:hover:bg-gray-700 dark:text-gray-400 dark:focus:ring-black">
+                Contáctanos
+            </a>
+        </div>
+        <!-- Carrusel de imágenes a la derecha -->
+        <div class="hidden lg:flex lg:col-span-4 justify-center items-center lg:order-2" data-aos="fade-right">
+            <div class="rounded-3xl overflow-hidden shadow-lg custom-transform w-full max-w-2xl">
+                <div id="carousel" class="relative overflow-hidden">
+                    <div id="carousel-inner" class="flex">
+                        <!-- Las imágenes se agregarán aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Busqueda -->
+    <div class="flex flex-col items-center relative isolate overflow-hidden px-6 py-20 text-center sm:px-16" data-aos="fade-up" data-aos-delay="200">
+        <p class="mx-auto max-w-2xl text-4xl dark:text-white text-center font-black my-2">
+            ¿No encontró el componente que estaba buscando?
+        </p>
+        <form action="/">
+            <label class="mx-auto mt-8 relative min-w-sm max-w-2xl flex flex-col md:flex-row items-center justify-center border border-gray-300 py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300 dark:border-gray-700" for="search-bar">
+                <input id="search-bar" placeholder="Tu palabra clave aquí" name="q" class="dark:bg-black px-6 py-2 w-full rounded-md flex-1 outline-none font-black my-2" required=" ">
+                <button type="submit" class="bg-navbar bg-green-500 w-full md:w-auto px-6 py-3 text-white rounded-xl transition-all active:scale-95 duration-100">
+                    <span class="text-sm font-black whitespace-nowrap truncate mx-auto">
+                        Buscar
+                    </span>
+                </button>
+                
+            </label>
+        </form>
+
+        <svg viewBox="0 0 1024 1024" class="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-x-1/2 [mask-image:radial-gradient(closest-side,white,transparent)] pointer-events-none" aria-hidden="true">
+            <circle cx="512" cy="512" r="512" fill="url(#827591b1-ce8c-4110-b064-7cb85a0b1217)" fill-opacity="0.7"></circle>
+            <defs>
+                <radialGradient id="827591b1-ce8c-4110-b064-7cb85a0b1217">
+                    <stop stop-color="#3b82f6"></stop>
+                    <stop offset="1" stop-color="#1d4ed8"></stop>
+                </radialGradient>
+            </defs>
+        </svg>
+    </div>
+</section>
+<!-- CIERRE DE LA SECCIÓN DEL HERO -->
+
+
+    <!-- SECCIÓN DE MODULOS -->
+    {% if user.is_superuser %}
+    <section class="bg-primary dark:bg-principal bg-slate-100" id="herramientas">
+        <div class="p-8" data-aos="fade-up" data-aos-delay="300">
+            <div class="flex flex-col items-center justify-center">
+                <span class="bg-navbar rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                    Módulos
+                </span>
+            </div>
+            <h1 class="text-secondary dark:text-white text-4xl  text-center mt-6 font-black my-2">
+                Módulos Disponibles
+            </h1>
+            <p class="text-secondary  dark:text-gray-400 text-center mt-6 text-lg font-light">
+                Como administrador, puedes gestionar los módulos de tu sistema.
+            </p>
+
+            <div class="m-2 sm:mx-40 sm:my-2 lg:grid lg:grid-cols-2 gap-8 lg:mx-20 lg:p-4 rounded-3xl justify-center"
+                data-aos="fade-up" data-aos-delay="300">
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fa-solid fa-box text-4xl text-indigo-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-indigo-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Gestionar Productos
+                    </h2>
+                    <p class="text-secondary font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Administra productos existentes y agrega nuevos productos a tu inventario. Realiza un seguimiento de los productos y sus detalles.
+                    </p>
+                    <div class="text-center mt-4">
+                        <a class="inline-flex items-center justify-center px-5 py-3 mr-3 font-black my-2 text-center text-white rounded-lg bg-indigo-500 hover:bg-indigo-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                            href="{% url 'security:auth_login' %}" id="btnAdministrador">Empezar</a>
+                    </div>
+                </div>
+
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fa-solid fa-list text-4xl text-green-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-green-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Gestionar Categorías
+                    </h2>
+                    <p class="text-secondary font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Administra las categorías de productos y organiza los productos en categorías específicas. Realiza un seguimiento de las categorías y sus detalles.
+                    </p>
+                    <div class="text-center mt-4">
+                        <a class="inline-flex items-center justify-center px-5 py-3 mr-3 font-black my-2 text-center text-white rounded-lg bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                            href="{% url 'security:auth_login' %}" id="btnAdministrador">Empezar</a>
+                    </div>
+                </div>
+
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fa-solid fa-copyright text-4xl text-red-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-red-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Gestionar Marcas
+                    </h2>
+                    <p class="text-secondary font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Administra las marcas de productos y organiza los productos en marcas específicas. Realiza un seguimiento de las marcas y sus detalles.
+                    </p>
+                    <div class="text-center mt-4">
+                        <a class="inline-flex items-center justify-center px-5 py-3 mr-3 font-black my-2 text-center text-white rounded-lg bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                            href="{% url 'security:auth_login' %}" id="btnAdministrador">Empezar</a>
+                    </div>
+                </div>
+
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-users text-4xl text-yellow-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-yellow-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Gestionar Proveedores
+                    </h2>
+                    <p class="text-secondary font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Administra los proveedores de productos y organiza los productos en proveedores específicos. Realiza un seguimiento de los proveedores y sus detalles.
+                    </p>
+                    <div class="text-center mt-4">
+                        <a class="inline-flex items-center justify-center px-5 py-3 mr-3 font-black my-2 text-center text-white rounded-lg bg-yellow-500 hover:bg-yellow-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
+                            href="{% url 'security:auth_login' %}" id="btnAdministrador">Empezar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    <!-- CIERRE DE LA SECCIÓN DE HERRAMIENTAS -->
+
+    {% if not user.is_superuser %}
+    <!-- SECCIÓN DE HERRAMIENTAS -->
+    <section class="dark:bg-principal bg-slate-100">
+        <div id="herramientas" class="p-8" data-aos="fade-up" data-aos-delay="300">
+            <div class="flex flex-col items-center justify-center">
+                <span class="bg-navbar rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                    HERRAMIENTAS
+                </span>
+            </div>
+            <h1 class="dark:text-white text-4xl  text-center mt-6 font-black my-2">
+                Impulsa tu Negocio
+            </h1>
+            <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+                Nuestro sistema ofrece las herramientas necesarias para maximizar el potencial de tu negocio.
+            </p>
+
+            <div class="m-8 sm:mx-40 sm:my-2 lg:grid lg:grid-cols-3 gap-8 lg:mx-20 lg:p-4 rounded-3xl justify-center"
+                data-aos="fade-up" data-aos-delay="300">
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-chart-line text-4xl text-indigo-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-indigo-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Optimizar tus operaciones
+                    </h2>
+                    <p class="font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Aumenta la eficiencia de tu equipo con herramientas automatizadas y análisis detallados.
+                    </p>
+                </div>
+
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-cogs text-4xl text-green-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-green-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Aumentar tus ventas
+                    </h2>
+                    <p class="font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Realiza ventas identificando nuevas oportunidades de negocio y cerrando más acuerdos.
+                    </p>
+                </div>
+
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-balance-scale text-4xl text-red-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-red-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Gestionar tus finanzas
+                    </h2>
+                    <p class="font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Administra tus finanzas de manera eficiente y toma decisiones informadas con análisis
+                        financieros detallados sobre los productos.
+                    </p>
+                </div>
+
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-users text-4xl text-orange-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-orange-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Satisfacción al cliente
+                    </h2>
+                    <p class="font-light text-gray-500 dark:text-gray-400 mb-3">
+                        El cliente recibe un servicio personalizado y una atención excepcional.
+                    </p>
+                </div>
+
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-tools text-4xl text-blue-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-blue-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Mantenimiento y reparaciones
+                    </h2>
+                    <p class="font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Ofrecemos servicios de mantenimiento y reparación del Software.
+                    </p>
+                </div>
+
+                <div
+                    class="information-card mb-4 p-4 bg-white dark:bg-secundario dark:border-none rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-users text-4xl text-yellow-500 mb-4"></i>
+                    <h2 class="uppercase mt-6 text-yellow-500 font-extrabold mb-3 font-black my-2 text-xl">
+                        Capacitación de personal
+                    </h2>
+                    <p class="font-light text-gray-500 dark:text-gray-400 mb-3">
+                        Brindamos programas de capacitación personalizados para mejorar las habilidades y el rendimiento
+                        del personal.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- CIERRE DE LA SECCIÓN DE HERRAMIENTAS -->
+
+    <!-- SECCION DE CARACTERISTICAS -->
+    <section class="dark:bg-principal">
+        <div class="p-8" data-aos="fade-up" data-aos-delay="300">
+            <div class="flex flex-col items-center justify-center">
+                <span class="bg-navbar rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                    Características
+                </span>
+            </div>
+            <h1 class="dark:text-white text-4xl text-center mt-6 font-black my-2">
+                Características del Software
+            </h1>
+            <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+                Te ofrecemos múltiples beneficios.
+            </p>
+            <div class="dark:bg-principal grid sm:grid-cols-2 lg:grid-cols-4 gap-8 m-4 lg:mx-4 lg:p-4 rounded-3xl"
+                data-aos="fade-up" data-aos-delay="300">
+                <!-- Card 1 -->
+                <div
+                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-green-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-green-500">
+                    <i class="fas fa-users text-3xl text-green-500"></i>
+                    <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a href="">Dar seguimiento de
+                            sus proveedores</a></h3>
+                </div>
+                <!-- Card 2 -->
+                <div
+                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-purple-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-purple-500">
+                    <i class="fas fa-tv text-3xl text-purple-500"></i>
+                    <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a href="">Interfaz
+                            Minimalista</a></h3>
+                </div>
+                <!-- Card 3 -->
+                <div
+                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-yellow-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-yellow-500">
+                    <i class="fas fa-clock text-3xl text-yellow-500"></i>
+                    <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a href="">Disponibilidad
+                            24/7</a></h3>
+                </div>
+                <!-- Card 4 -->
+                <div
+                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-blue-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-blue-500">
+                    <i class="fas fa-shopping-cart text-3xl text-blue-500"></i>
+                    <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a href="">Gestiona tus Ventas y
+                            Compras</a></h3>
+                </div>
+                <!-- Card 5 -->
+                <div
+                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-red-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-red-500">
+                    <i class="fas fa-check-circle text-3xl text-red-500"></i>
+                    <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a href="">Servicios
+                            Garantizados</a></h3>
+                </div>
+                <!-- Card 6 -->
+                <div
+                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-teal-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-teal-500">
+                    <i class="fas fa-shield-alt text-3xl text-teal-500"></i>
+                    <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a href="">Aplicación Segura</a>
+                    </h3>
+                </div>
+                <!-- Card 7 -->
+                <div
+                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-pink-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-pink-500">
+                    <i class="fas fa-users text-3xl text-pink-500"></i>
+                    <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a href="">Contacto con los
+                            administradores</a></h3>
+                </div>
+                <!-- Card 8 -->
+                <div
+                    class="characteristics-card bg-white dark:bg-secundario dark:border-none transition duration-500 hover:bg-gradient-to-r hover:from-indigo-200 dark:hover:bg-gradient-to-r dark:hover:from-black dark:hover:to-indigo-500">
+                    <i class="fas fa-moon text-3xl text-indigo-500"></i>
+                    <h3 class="dark:text-gray-400 font-bold characteristics-card-title"><a href="">Implementación del
+                            modo oscuro</a></h3>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- CIERRE DE LA SECCION DE CARACTERISTICAS -->
+
+
+    {% endif %}
+
+  <!-- End Card -->
+</section>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script src="{% static 'js/sweet_alert.js' %}"></script>
+
+<!-- Script para el modal -->
+<script>
+    $(document).ready(function () {
+        // Función para ocultar el modal al hacer clic en cualquier botón de ingresar
+        $('#btnCliente, #btnAdministrador, #btnModoInvitado').click(function (e) {
+            e.preventDefault(); // Evita que el enlace se siga
+            $('#modal-home').addClass('hidden'); // Oculta el modal usando Tailwind
+
+            // Comportamiento específico para el botón de "Modo Invitado"
+            if (this.id === 'btnModoInvitado') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '<h2 class="dark-title">ADVERTENCIA</h2>',
+                    text: 'Para usar las funciones de nuestra aplicación, debe registrarse en nuestro sistema.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Registrarse',
+                    cancelButtonText: 'Continuar con el modo invitado',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirecciona a la página de registro
+                        window.location.href = "{% url 'security:auth_login' %}";
+                    }
+                });
+            } else {
+                // Redirecciona a la URL especificada en el enlace
+                window.location.href = $(this).attr('href');
+            }
+        });
+    });
+</script>
+
+<!-- Script para el carrusel de imágenes -->
+<script>
+    var imagePaths = [
+        "{% static 'img/home-carausel/logo email.jpeg' %}",
+        "{% static 'img/home-carausel/logo recuperar contra.jpeg' %}",
+        "{% static 'img/home-carausel/contraexito.jpeg' %}",
+        "{% static 'img/home-carausel/carausel-4.jpg' %}",
+        "{% static 'img/home-carausel/carausel-5.jpg' %}",
+        "{% static 'img/home-carausel/carausel-6.jpg' %}",
+        "{% static 'img/home-carausel/carausel-7.jpg' %}",
+        "{% static 'img/home-carausel/carausel-8.jpg' %}",
+    ];
+
+    var carouselInner = document.getElementById('carousel-inner');
+    var currentSlide = 0;
+    var totalSlides = imagePaths.length;
+
+    function showSlide(index) {
+        carouselInner.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        showSlide(currentSlide);
+    }
+
+    window.onload = function () {
+        imagePaths.forEach((path) => {
+            carouselInner.innerHTML += `<img src="${path}" alt="Carousel Image" class="w-full">`;
+        });
+        setInterval(nextSlide, 5000); // Cambiar a la siguiente imagen cada 5 segundos
+    };
+</script>
+
+<!-- Script para enviar correos -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById('contact-form');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+            var formData = new FormData(form);
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById('success-message').classList.remove('hidden');
+                    form.reset(); // Resetear el formulario
+
+                    // Ocultar el mensaje de éxito después de 5 segundos
+                    setTimeout(() => {
+                        document.getElementById('success-message').classList.add('hidden');
+                    }, 5000);
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            alert(data["errors"].map(error => error["message"]).join(", "));
+                        } else {
+                            alert('Oops! Hubo un problema al enviar tu formulario');
+                        }
+                    });
+                }
+            }).catch(error => {
+                alert('Oops! Hubo un problema al enviar tu formulario');
+            });
+        });
+    });
+</script>
+{% endblock content %}

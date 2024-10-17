@@ -1,0 +1,151 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% block content %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+<section class="dark:bg-principal bg-slate-100 mt-4">
+    <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+        <div class="sm:pt-28 lg:pt-24">
+            <div class="flex flex-col items-center justify-center">
+                <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                    {{ title1 }}
+                </span>
+            </div>
+            <h1 class="dark:text-white text-4xl text-center mt-6 font-quicksand">
+                {{ title2 }}
+            </h1>
+            <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+                Gestione con facilidad cada uno de sus productos.
+            </p>
+            <!-- Barra de busqueda -->
+            <div class="p-4 flex justify-center">
+                <label for="table-search" class="sr-only">Search</label>
+                <div class="relative mt-1">
+                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                        </svg>
+                    </div>
+                    <input type="text" id="table-search"
+                        class="text-center pl-10 shadow-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 pr-12 dark:bg-principal dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                        placeholder="Nombre del Producto">
+                </div>
+            </div>
+        </div>
+        <div class="m-4 lg:m-8 sm:mx-40 sm:my-2 lg:grid lg:grid-cols-1 gap-8 lg:mx-20 lg:p-4 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+            {% for item in products %}
+            <div class="mb-4 flex justify-center custom-transform product" data-name="{{ item.description }}">
+                <div class="dark:bg-secundario relative w-full overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md dark:border-none"> 
+                    <div class="dark:bg-secundario text-center card card-custom flex flex-row"> 
+                        <div class="product-image-container">
+                            <img class="product-image" src="{% if item.image %}{{ item.image.url }}{% else %}{% static 'img/default_product.jpg' %}{% endif %}" alt="Imagen del producto">
+                        </div>
+                        <div class="dark:bg-contenedores p-4 card-body flex flex-col justify-center items-center w-full text-center">
+                            <h1 class="dark:text-blue-400 text-2xl text-center mt-6 font-black font-Tiny2">
+                                {{ item.description }}
+                            </h1>
+                            <p class="dark:text-green-500 font-quicksand">{{ item.get_line_display }}</p>
+                            <h3 class="dark:text-blue-300 font-quicksand">Stock: <span class="font-light font-Quicksand dark:text-gray-400" id="stock-{{ item.id }}">{{ item.stock }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-quicksand">Marca: <span class="font-light font-Quicksand dark:text-gray-400" id="brand-{{ item.id }}">{{ item.brand }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-quicksand">Categoría: <span class="font-light font-Quicksand dark:text-gray-400" id="categories-{{ item.id }}">{{ item.get_categories }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-quicksand">Fecha de expiración: <span class="font-light font-Quicksand dark:text-gray-400" id="expiration_date-{{ item.id }}"><br>{{ item.expiration_date | date:"Y-m-d" }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-quicksand">Precio: <span class="font-light font-Quicksand dark:text-gray-400"><br><span class="custom-price text-2xl" id="price-{{ item.id }}">${{ item.price }}</span></span></h3>
+                        </div> 
+                        <div class="dark:bg-contenedores card-footer flex flex-col md:flex-row justify-center items-center">
+                            <a class="custom-button text-white py-2 px-4 rounded-full flex items-center justify-center add-to-cart-button" data-product-id="{{ item.id }}" href="#"><i class="fa-solid fa-cart-plus"></i> Agregar al carrito</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="flex flex-col md:flex-row justify-center form-group text-center p-4">
+            <a class="custom-button text-white py-2 px-4 rounded-full flex items-center justify-center" href="{% url 'home' %}">
+                <i class="fa-solid fa-house"></i> Volver a la tienda
+            </a>
+        </div>
+    </div>
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <style>
+        .product-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+        }
+        .product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        .custom-button {
+            background-color: #b667d6;
+            transition: background-color 0.3s ease;
+        }
+        .custom-button:hover {
+            background-color: #a056c3;
+        }
+        .custom-price {
+            color: #b667d6;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
+
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevenir la navegación
+
+                    const productId = this.getAttribute('data-product-id');
+                    // Obtener detalles del producto desde el DOM
+                    const productElement = this.closest('.card-custom');
+                    const product = {
+                        id: productId,
+                        description: productElement.querySelector('h1').textContent.trim(),
+                        line_display: productElement.querySelector('p').textContent.trim(),
+                        image: productElement.querySelector('img').src,
+                        stock: productElement.querySelector(`#stock-${productId}`).textContent.trim(),
+                        brand: productElement.querySelector(`#brand-${productId}`).textContent.trim(),
+                        categories: productElement.querySelector(`#categories-${productId}`).textContent.trim(),
+                        expiration_date: productElement.querySelector(`#expiration_date-${productId}`).textContent.trim(),
+                        price: productElement.querySelector(`#price-${productId}`).textContent.trim(),
+                    };
+
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    cart.push(product);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    // Usar SweetAlert para mostrar el mensaje de éxito
+                    Swal.fire({
+                        title: '¡Producto agregado!',
+                        text: 'El producto ha sido agregado al carrito.',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#3085d6'
+                    });
+                });
+            });
+
+            // Filtro de búsqueda en el lado del cliente
+            const searchInput = document.querySelector('#table-search');
+            searchInput.addEventListener('keyup', function() {
+                const query = this.value.toLowerCase();
+                const products = document.querySelectorAll('.product');
+                products.forEach(function(product) {
+                    const productName = product.getAttribute('data-name').toLowerCase();
+                    if (productName.indexOf(query) > -1) {
+                        product.style.display = '';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</section>
+{% endblock content %}

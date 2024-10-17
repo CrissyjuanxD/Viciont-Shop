@@ -1,0 +1,119 @@
+{% extends 'components/base.html' %}
+
+{% block content %}
+<title>{% block title %}Listado de Permisos de Grupo para Módulos{% endblock title %}</title>
+<section class="dark:bg-principal mt-10 px-4 sm:px-6 lg:px-8">
+    <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+        <div class="pt-10">
+            <h1 class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                Listado de Permisos de Grupo para Módulos
+            </h1>
+        </div>
+
+        <!-- Formulario de búsqueda -->
+        <div class="mt-6">
+            <form method="GET" action="" class="flex justify-center mb-6">
+                <input type="text" name="q" placeholder="Buscar módulos..." value="{{ query }}" class="border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-bg-custom focus:border-bg-custom dark:bg-gray-800 dark:text-white">
+                <button type="submit" class="bg-blue-500 text-white rounded-r-lg py-2 px-4 hover:bg-blue-600 transition-colors duration-300">Buscar</button>
+            </form>
+        </div>
+
+        <!-- Tabla de permisos de grupo para módulos -->
+        <table class="table-auto w-full mb-6">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Módulo</th>
+                    <th class="px-4 py-2">Grupo</th>
+                    <th class="px-4 py-2">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group_module_permission in page_obj %}
+                <tr>
+                    <td class="border px-4 py-2">{{ group_module_permission.module.name }}</td>
+                    <td class="border px-4 py-2">{{ group_module_permission.group.name }}</td>
+                    <td class="border px-4 py-2">
+                        <button class="border border-transparent bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-full transition-colors duration-300" onclick="openDeleteModal('{{ group_module_permission.pk }}', '{{ group_module_permission.module.name }}')">
+                            <i class="fa-solid fa-trash text-white hover:text-mint-green mr-2"></i> Eliminar
+                        </button>
+                        <noscript>
+                            <a href="{% url 'security:groupmodulepermission_delete' group_module_permission.pk %}" class="border border-transparent bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-full transition-colors duration-300">
+                                <i class="fa-solid fa-trash text-white hover:text-mint-green mr-2"></i> Eliminar
+                            </a>
+                        </noscript>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <div class="mt-8">
+            <nav class="flex justify-center">
+                <ul class="inline-flex items-center -space-x-px">
+                    {% if page_obj.has_previous %}
+                    <li>
+                        <a href="?page=1{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700">Primero</a>
+                    </li>
+                    <li>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li aria-current="page">
+                        <span class="px-3 py-2 leading-tight text-gray-600 bg-gray-50 border border-gray-300">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li>
+                        <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li>
+                        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">Siguiente</a>
+                    </li>
+                    <li>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}" class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700">Último</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-center gap-4 mt-10">
+            <a class="border border-transparent bg-custom hover:bg-custom text-white py-2 px-4 rounded-full transition-colors duration-300" href="{% url 'security:groupmodulepermission_create' %}">
+                <i class="fa-solid fa-plus text-white hover:text-mint-green mr-2"></i> GESTIONAR
+            </a>
+            <a class="border border-transparent bg-custom hover:bg-custom text-white py-2 px-4 rounded-full transition-colors duration-300" href="{% url 'home' %}">
+                <i class="fa-solid fa-house text-white hover:text-mint-green"></i>
+            </a>
+        </div>
+    </div>
+</section>
+<style>
+    .bg-custom {
+    background-color: #c269e5;
+}
+
+    .hover\:bg-custom:hover {
+    background-color: #c269e5;
+}
+</style>
+{% include 'security/delete.html' %}
+<script>
+    function openDeleteModal(id, description) {
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.action = `{% url 'security:groupmodulepermission_delete' 0 %}`.replace('0', id);
+        document.getElementById('Description').textContent = `ID: ${id} - ${description}`;
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+    }
+</script>
+{% endblock %}

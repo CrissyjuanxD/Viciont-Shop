@@ -1,0 +1,194 @@
+{% extends 'components/base.html' %}
+{% block content %}
+<title>{% block title %} Estadísticas de Compra {% endblock title %}</title>
+<section class="dark:bg-principal bg-slate-100 mt-4">
+    <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+        <div class="sm:pt-28 lg:pt-24">
+            <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+                Estadísticas de Compra
+            </h1>
+        </div>
+        <div class="flex justify-center items-center m-4 lg:m-8 sm:mx-40 sm:my-2 lg:mx-20 lg:p-4 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+            <div class="text-center">
+                <!-- Line Chart Container -->
+                <div id="chartContainer" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg col-span-2" style="display: none;">
+                    <h2 class="dark:text-white text-2xl text-center mb-6">Line Chart</h2>
+                    <canvas id="purchaseChart" class="mx-auto" style="max-width: 1000px; height: 500px;"></canvas>
+                </div>
+                <div id="noDataMessage" style="display: none;">
+                    <p class="text-lg font-light text-red-500">
+                        No hay estadísticas que mostrar.
+                    </p>
+                </div>
+                <div id="buttonsContainer" style="display: none;" class="mt-4">
+                    <div class="flex justify-center space-x-4">
+                        <button id="clearChartButton" class="px-4 py-2 bg-purple-500 text-white rounded flex items-center">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            Limpiar Datos
+                        </button>
+                        <button id="downloadChartButton" class="px-4 py-2 bg-purple-500 text-white rounded flex items-center">
+                            <i class="fas fa-download mr-2"></i>
+                            Descargar Gráfico
+                        </button>
+                        <button id="generatePdfButton" class="px-4 py-2 bg-purple-500 text-white rounded flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i>
+                            Generar Factura PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-col md:flex-row justify-center form-group text-center p-4 gap-4">
+                    <a class="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 rounded-full flex items-center justify-center" href="{% url 'purcharse:purcharse_create' %}">
+                        Volver al carrito
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const purchaseData = JSON.parse(localStorage.getItem('purchaseData')) || [];
+        const ctx = document.getElementById('purchaseChart')?.getContext('2d');
+
+        if (purchaseData.length > 0) {
+            // Mostrar gráfico y botones si hay datos
+            document.getElementById('chartContainer').style.display = 'block';
+            document.getElementById('noDataMessage').style.display = 'none';
+            document.getElementById('buttonsContainer').style.display = 'block';
+
+            // Extraer fechas y datos
+            const labels = purchaseData.map(item => `${item.date} - ${item.description}`);
+            const data = purchaseData.map(item => parseFloat(item.price.replace(/[^0-9.-]+/g,"")/100) * item.quantity);
+
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Gastado por Producto',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const label = tooltipItem.label || '';
+                                    const value = tooltipItem.raw;
+                                    return `${label}: $${value.toFixed(2)}`;
+                                },
+                                title: function(tooltipItem) {
+                                    const item = tooltipItem[0];
+                                    const date = purchaseData[item.dataIndex].date;
+                                    return `Fecha: ${date}`;
+                                }
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: 10
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fecha - Descripción'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Total ($)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Función para limpiar los datos del gráfico y eliminar de localStorage
+            document.getElementById('clearChartButton').addEventListener('click', function () {
+                // Limpiar datos del gráfico
+                chart.data.labels = [];
+                chart.data.datasets.forEach((dataset) => {
+                    dataset.data = [];
+                });
+                chart.update();
+
+                // Eliminar datos de localStorage
+                localStorage.removeItem('purchaseData');
+
+                // Mostrar mensaje de no hay datos
+                document.getElementById('chartContainer').style.display = 'none';
+                document.getElementById('noDataMessage').style.display = 'block';
+                document.getElementById('buttonsContainer').style.display = 'none';
+            });
+
+            // Función para descargar el gráfico como imagen
+            document.getElementById('downloadChartButton').addEventListener('click', function () {
+                const link = document.createElement('a');
+                link.href = chart.toBase64Image();
+                link.download = 'estadisticas_de_compra.png';
+                link.click();
+            });
+
+        } else {
+            // Ocultar gráfico y botones, mostrar mensaje de no hay datos
+            document.getElementById('chartContainer').style.display = 'none';
+            document.getElementById('noDataMessage').style.display = 'block';
+            document.getElementById('buttonsContainer').style.display = 'none';
+        }
+
+        // Función para generar el PDF con tabla
+        document.getElementById('generatePdfButton').addEventListener('click', function () {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+
+            if (purchaseData.length === 0) {
+                pdf.text("No hay estadísticas que mostrar.", 14, 10);
+                pdf.save('factura.pdf');
+                return;
+            }
+
+            // Crear tabla en PDF
+            const tableData = purchaseData.map(item => [
+                item.date, 
+                item.description, 
+                item.price, 
+                item.quantity, 
+                (parseFloat(item.price.replace(/[^0-9.-]+/g,"")) * item.quantity).toFixed(2)
+            ]);
+
+            const tableHeaders = ['Fecha', 'Descripción', 'Precio', 'Cantidad', 'Total'];
+
+            // Calcular total general
+            const totalAmount = tableData.reduce((acc, row) => acc + parseFloat(row[4]), 0).toFixed(2);
+            
+            // Agregar fila con total
+            tableData.push(['', '', '', 'Total', `$${totalAmount}`]);
+
+            pdf.text("Estadísticas de Compra", 70, 10);
+            pdf.autoTable({
+                head: [tableHeaders],
+                body: tableData,
+                startY: 20,
+                headStyles: { fillColor: [128/255, 0, 128/255] }, // Color RGB para morado
+            });
+
+            pdf.save('factura.pdf');
+        });
+    });
+</script>
+{% endblock content %}

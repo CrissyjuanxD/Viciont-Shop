@@ -1,0 +1,86 @@
+{% extends 'components/base.html' %}
+
+{% block content %}
+    <title>{% block title %} {{ title1 }} {% endblock title %}</title>
+    <section class="dark:bg-principal mt-20">
+        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex flex-col items-center justify-center">
+                <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                    {{ title1 }}
+                </span>
+            </div>
+            <h1 class="dark:text-white text-4xl text-center mt-6 font-light">
+                {{ title2 }}
+            </h1>
+            <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+                Gestione sus compañías.
+            </p>
+        </div>
+        <div class="m-4 lg:m-8 sm:mx-40 sm:my-2 lg:grid lg:grid-cols-4 gap-8 lg:mx-20 lg:p-4 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+            {% for item in company %}
+                <div class="dark:bg-secundario relative overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md dark:border-none">
+                    <figure class="px-10 pt-10">
+                        <img class="mx-auto w-40 h-40 object-contain rounded-2xl"
+                             src="{% if item.logo %}{{ item.logo.url }}{% endif %}"
+                             alt="Imagen del proveedor">
+                    </figure>
+                    <div class="p-4">
+                        <h1 class="dark:text-blue-400 text-2xl text-center mt-6 font-black uppercase">
+                            {{ item.name }}
+                        </h1>
+                        <div class="dark:bg-contenedores card-body flex flex-col justify-center items-center mt-4">
+                            <h3 class="dark:text-blue-300 font-light">Representante: <span class="font-light dark:text-gray-400">{{ item.representative }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-light">Dirección: <span class="font-light dark:text-gray-400">{{ item.address }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-light">Teléfono: <span class="font-light dark:text-gray-400">{{ item.landline }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-light">Correo: <span class="font-light dark:text-gray-400">{{ item.email }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-light">Creación: <span class="font-light dark:text-gray-400">{{ item.created | date:"Y-m-d" }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-light">Última edición: <span class="font-light dark:text-gray-400">{{ item.updated | date:"Y-m-d" }}</span></h3>
+                            <h3 class="dark:text-blue-300 font-light">
+                                Estado: 
+                                {% if item.state %}
+                                    <i class="fa-solid fa-check text-green-500"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-square-minus text-red-500"></i>
+                                {% endif %}
+                            </h3>
+                        </div>
+                        <div class="dark:bg-contenedores card-footer flex justify-center mt-4">
+                            <a href="{% url 'core:company_update' item.id %}" class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-2 flex items-center">
+                                <i class="fa-solid fa-gear mr-2"></i> Editar
+                            </a>
+                            <button class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-full flex items-center" onclick="openDeleteModal('{{ item.id }}', '{{ item.name }}')">
+                                <i class="fa-solid fa-trash mr-2"></i> Eliminar
+                            </button>
+                            <noscript>
+                                <a href="{% url 'core:company_delete' item.id %}" class="bg-red-700 hover:bg-red-800 text-white py-2 px-4 rounded-full flex items-center">
+                                    <i class="fa-solid fa-trash mr-2"></i> Eliminar
+                                </a>
+                            </noscript>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="flex flex-col md:flex-row justify-center form-group text-center p-4">
+            <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-2 mb-2 md:mb-0 flex items-center justify-center" href="{% url 'core:company_create' %}">
+                <i class="fa-solid fa-plus mr-2"></i> Nueva Compañía
+            </a>
+            <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center" href="{% url 'home' %}">
+                <i class="fa-solid fa-house"></i>
+            </a>
+        </div>
+    </section>
+
+    {% include 'core/delete.html' %}
+    <script>
+        function openDeleteModal(id, name) {
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.action = `{% url 'core:company_delete' 0 %}`.replace('0', id);
+            document.getElementById('Description').textContent = `ID: ${id} - ${name}`;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+        function closeModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+    </script>
+{% endblock %}

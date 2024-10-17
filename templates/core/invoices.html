@@ -1,0 +1,116 @@
+
+<style>
+  .totals-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    position: absolute;
+    right: 2rem;
+    top: 10rem;
+    width: 300px;
+  }
+  .product-box {
+    width: calc(100% - 350px);
+    display: inline-block;
+  }
+  .payment-box {
+    display: inline-block;
+    vertical-align: top;
+  }
+  .form-input, .form-select {
+    padding: 0.25rem;
+    font-size: 0.875rem;
+    color: #000; /* Color negro para los datos de los inputs */
+  }
+  .form-label {
+    font-size: 0.875rem;
+    color: #000; /* Color negro para los labels */
+  }
+  .form-select {
+    border-color: #38b2ac; /* Borde color verde menta */
+  }
+</style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+  <div class="container mx-auto p-4">
+    <header class="bg-gradient-to-r from-green-400 to-teal-300 dark:from-gray-700 dark:to-gray-800 text-white p-6 rounded-lg shadow-lg mb-6 flex flex-col sm:flex-row justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold mb-2">Factura de Comisariato</h1>
+        <p class="text-lg">Genera tu factura fácilmente</p>
+      </div>
+      <form class="space-y-2 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
+        <div>
+          <label class="block form-label mb-1" for="client">Cliente:</label>
+          <input id="client" type="text" class="form-input w-full border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Cliente">
+        </div>
+        <div>
+          <label class="block form-label mb-1" for="date">Fecha de registro:</label>
+          <input id="date" type="date" class="form-input w-full border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" value="2024-01-31">
+        </div>
+        <div>
+          <label class="block form-label mb-1" for="payment-method">Método de pago:</label>
+          <select id="payment-method" class="form-select w-full border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <option>EFECTIVO</option><option>TARJETA</option><option>TRANSFERENCIA</option>
+            <!-- Otras opciones -->
+          </select>
+        </div>
+      </form>
+      <button onclick="toggleDarkMode()" class="bg-teal-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 mt-4 sm:mt-0">
+        Toggle Dark Mode
+      </button>
+    </header>
+
+    <main class="mt-6 relative">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md product-box">
+        <h2 class="text-2xl font-semibold mb-6">Productos</h2>
+        <div class="mb-4">
+          <label for="product" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Seleccionar Producto:</label>
+          <select id="product" name="product" class="mt-2 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-md">
+            <option value="Arroz|1.50">Arroz</option>
+            <option value="Frijoles|2.00">Frijoles</option>
+            <option value="Aceite|3.50">Aceite</option>
+            <option value="Azúcar|1.75">Azúcar</option>
+          </select>
+        </div>
+        <button onclick="addProduct()" class="bg-teal-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 mb-4">Agregar Producto</button>
+
+        <!-- Cabecera de la lista de productos -->
+        <div class="grid grid-cols-6 gap-4 text-center font-semibold mb-4">
+          <div>Producto</div>
+          <div>Cantidad</div>
+          <div>Precio</div>
+          <div>IVA</div>
+          <div>Subtotal</div>
+          <div></div>
+        </div>
+
+        <!-- Lista de Productos -->
+        <div id="product-list" class="space-y-4">
+          <!-- Los productos seleccionados aparecerán aquí -->
+        </div>
+      </div>
+
+      <!-- Totales -->
+      <div class="totals-box" id="totals-section" style="display: none;">
+        <div class="flex justify-between text-lg font-semibold w-full">
+          <span>Subtotal:</span>
+          <span>$<span id="total">0.00</span></span>
+        </div>
+        <div class="flex justify-between text-lg font-semibold mt-2 w-full">
+          <span>IVA (12%):</span>
+          <span>$<span id="iva">0.00</span></span>
+        </div>
+        <div class="flex justify-between text-lg font-semibold mt-2 w-full">
+          <span>Total con IVA:</span>
+          <span>$<span id="total-iva">0.00</span></span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+
+

@@ -1,0 +1,82 @@
+{% extends 'components/base.html' %}
+{% load static %}
+
+{% block content %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+<section class="dark:bg-principal mt-20">
+    <div class="flex flex-col items-center justify-center">
+        <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+            {{ title1 }}
+        </span>
+    </div>
+    <div class="text-center" data-aos="fade" data-aos-delay="200">
+        <h1 class="dark:text-white text-4xl  text-center mt-6 font-black my-2">
+            {{ title2 }}
+        </h1>
+        <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+            Visualice su información.
+        </p>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="space-y-6 py-4">
+        <div class="grid grid-cols-2 gap-8 mx-4 lg:mx-20" data-aos="fade">
+            <!-- Columna izquierda -->
+            <div class="bg-white dark:bg-secundario rounded-3xl flex flex-col justify-center items-center p-8" data-aos="fade-right" data-aos-delay="200">
+                <h2 class="dark:text-blue-300 text-2xl text-center mt-6 font-black my-2 mb-4">Perfil de Usuario</h2>
+                <div class="w-[60%] text-center rounded-full overflow-hidden">
+                    <div id="imagenPreview">
+                        {% if user.get_image %}
+                        <img src="{{ user.get_image }}" class="mx-auto d-block rounded-full" alt="Foto de perfil" style="width: 150px; height: 150px;">
+                        {% else %}
+                        <img src="{% static 'img/default_person.png' %}" class="mx-auto d-block rounded-full" alt="Foto de perfil por defecto" style="width: 150px; height: 150px;">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- Columna derecha -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-3xl dark:bg-secundario bg-white flex flex-col justify-center items-center" data-aos="fade-right" data-aos-delay="200">
+                <!-- Datos de Usuario -->
+                <div>
+                    <p class="dark:text-gray-400"><span class="dark:text-blue-300 font-black uppercase text-2xl">Usuario:</span><br>{{ user.username }}
+                        {% if user.is_superuser %}
+                        <span class="dark:text-green-300 font-black font-Tiny5 uppercase text-2xl text-green-500"> | Administrador</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div>
+                    <p class="dark:text-gray-400"><span class="dark:text-blue-300 font-black uppercase text-2xl">Nombres:</span><br> {{ user.first_name }} {{ user.last_name }}</p>
+                </div>
+                <div>
+                    <p class="dark:text-gray-400"><span class="dark:text-blue-300 font-black uppercase text-2xl">Cédula:</span><br> {{ user.dni }}</p>
+                </div>
+                <div>
+                    {% if user.phone %}
+                    <p class="dark:text-gray-400"><span class="dark:text-blue-300 font-black uppercase text-2xl">Celular:</span><br> {{ user.phone }}</p>
+                    {% else %}
+                    <p class="dark:text-gray-400"><span class="dark:text-blue-300 font-black uppercase text-2xl">Celular:</span><br> No Registrado</p>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if user.email %}
+                    <p class="dark:text-gray-400"><span class="dark:text-blue-300 font-black uppercase text-2xl">Correo:</span><br> <a href="mailto:{{ user.correo }}">{{ user.email }}</a></p>
+                    {% else %}
+                    <p class="dark:text-gray-400"><span class="dark:text-blue-300 font-black uppercase text-2xl">Correo:</span><br> No Registrado</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <p class="dark:text-gray-400"><span class="dark:text-blue-300 font-black uppercase text-2xl">Dirección:</span><br> {{ user.direction }}</p>
+                </div>
+            </div>
+            <!-- Botones debajo de la imagen -->
+            <div class="flex justify-center mt-6">
+                <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-2 flex items-center justify-center" href="{% url 'security:auth_update_profile' %}">
+                    <i class="fa-solid fa-file-pen mr-2"></i> Actualizar Datos
+                </a>
+                <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full mr-2 flex items-center justify-center" href="{% url 'security:auth_update_contra' %}">
+                    <i class="fa-solid fa-key mr-2"></i> Actualizar Contraseña
+                </a>
+            </div>
+        </div>
+    </form>
+</section>
+
+{% endblock content %}

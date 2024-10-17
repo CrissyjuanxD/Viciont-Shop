@@ -1,0 +1,49 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% block content %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+<section class="dark:bg-principal mt-20">
+    <div class="text-center" data-aos="fade" data-aos-delay="200">
+        <div class="flex flex-col items-center justify-center">
+            <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                IVA
+            </span>
+        </div>
+        <h1 class="dark:text-white text-4xl text-center mt-6 font-Tiny2">
+            MODIFICACION DEL IVA
+        </h1>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="mx-auto max-w-3xl bg-white dark:bg-secundario shadow-md rounded-lg p-8 space-y-6 mt-8">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {{ form.description.errors }}
+            <div class="mb-4">
+                <label for="{{ form.description.id_for_label }}"
+                    class="dark:text-blue-300 font-black uppercase text-lg">{{ form.description.label }}</label>
+                {{ form.description }}
+            </div>
+            {{ form.value.errors }}
+            <div class="mb-4">
+                <label for="{{ form.value.id_for_label }}"
+                    class="dark:text-blue-300 font-black uppercase text-lg">{{ form.value.label }}</label>
+                {{ form.value }}
+            </div>
+            {{ form.active.errors }}
+            <div class="mb-4">
+                <label for="{{ form.active.id_for_label }}"
+                    class="dark:text-blue-300 font-black uppercase text-lg">{{ form.active.label }}</label>
+                {{ form.active }}
+            </div>
+        </div>
+        <div class="flex justify-center mt-6">
+            <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-6 rounded-full flex items-center">
+                <i class="fa-solid fa-save mr-2"></i>Guardar IVA
+            </button>
+            <a class="bg-red-700 hover:bg-red-800 text-white py-2 px-6 rounded-full flex items-center ml-4" href="{% url 'core:iva_list' %}">
+                <i class="fa-solid fa-xmark mr-2"></i>Cancelar
+            </a>
+        </div>
+    </form>
+</section>
+
+{% endblock content %}

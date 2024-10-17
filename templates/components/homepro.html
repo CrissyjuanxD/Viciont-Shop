@@ -1,0 +1,126 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% block content %}
+<title>{% block title %} {{ title1 }} {% endblock title %}</title>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<section id="dashboardSection" class="dark:bg-principal mt-20 px-4">
+    <div class="text-center" data-aos="fade" data-aos-delay="200">
+        <div class="flex flex-col items-center justify-center">
+            <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                {{ title1 }}
+            </span>
+        </div>
+        <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+            {{ title2 }}
+        </h1>
+    </div>
+    
+    <!-- Date Range Inputs -->
+    <div class="flex justify-center mt-6 space-x-4">
+        <input type="date" id="startDate" class="px-4 py-2 border border-gray-300 rounded-md">
+        <input type="date" id="endDate" class="px-4 py-2 border border-gray-300 rounded-md">
+        <button onclick="updateCharts()" class="px-4 py-2 bg-indigo-500 text-white rounded-md">Actualizar</button>
+    </div>
+
+    <!-- Dashboard Grid Container -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <!-- Line Chart Container -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg col-span-2">
+            <h2 class="dark:text-white text-2xl text-center mb-6">Line Chart</h2>
+            <div id="purchaseChart" class="mx-auto" style="max-width: 800px;">
+                <!-- ApexCharts line chart will be rendered here -->
+            </div>
+        </div>
+        
+        <!-- Donut Chart Container -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="dark:text-white text-2xl text-center mb-6">Estadística de Compra</h2>
+            <div id="donutChartContainer" class="mx-auto" style="max-width: 400px;">
+                <!-- Donut Chart will be rendered here -->
+                <div id="donutChart"></div>
+                <div id="noDataMessage" class="text-center mt-4" style="display: none;">
+                    <p class="text-lg font-light text-red-500">No hay datos disponibles.</p>
+                </div>
+                <div id="buttonsContainer" class="text-center mt-4" style="display: none;">
+                    <button id="clearChartButton" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+                        Limpiar Datos
+                    </button>
+                    <button id="downloadChartButton" class="mt-4 px-4 py-2 bg-green-500 text-white rounded">
+                        Descargar Gráfico
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column Chart Container -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg col-span-2">
+            <h2 class="dark:text-white text-2xl text-center mb-6">Estadística de Ventas</h2>
+            <div class="mx-auto" style="max-width: 800px;">
+                <canvas id="columnvent" width="400" height="200"></canvas>
+            </div>
+        </div>
+        
+        <!-- Pie Chart Container -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="dark:text-white text-2xl text-center mb-6">TOTAL DE INGRESOS POR DIA</h2>
+            <div class="mx-auto" style="max-width: 400px;">
+                <canvas id="pieChart" width="400" height="200"></canvas>
+            </div>
+            <div id="noDataMessagePie" class="text-center text-gray-500 dark:text-gray-400" style="display: none;">No hay datos disponibles para las fechas seleccionadas.</div>
+        </div>
+    </div>
+    
+    <!-- Download Dashboard Button -->
+    <div class="text-center mt-8">
+        <button id="downloadDashboardButton" class="px-6 py-3 bg-green-500 text-white rounded-lg flex items-center justify-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
+            </svg>
+            <span>Descargar Dashboard</span>
+        </button>
+    </div>
+</section>
+
+<script src="{% static 'js/ventas.js' %}"></script>
+<script src="{% static 'js/donut-chart.js' %}"></script>
+<script src="{% static 'js/linechart.js' %}"></script>
+<script>
+function updateCharts() {
+    var startDate = document.getElementById('startDate').value;
+    var endDate = document.getElementById('endDate').value;
+
+    var url = "{% url 'sales:estadisticas_venta' %}?start_date=" + startDate + "&end_date=" + endDate;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); // Indicamos que es una solicitud AJAX
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var salesData = JSON.parse(xhr.responseText);
+            // Aquí puedes actualizar tus gráficos con los nuevos datos
+            console.log(salesData); // Por ahora, solo imprime los datos en la consola
+        }
+    };
+
+    xhr.send();
+}
+
+document.getElementById('downloadDashboardButton').addEventListener('click', function () {
+    const dashboardSection = document.getElementById('dashboardSection');
+    
+    html2canvas(dashboardSection).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'dashboard.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+});
+</script>
+
+{% endblock content %}

@@ -1,0 +1,220 @@
+{% extends 'components/base.html' %}
+{% block content %}
+<title>{% block title %} Carrito de Compras {% endblock title %}</title>
+<section class="dark:bg-gray-900 bg-slate-100 mt-4">
+    <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+        <div class="sm:pt-28 lg:pt-24">
+            <div class="flex flex-col items-center justify-center">
+                <span class="rounded-full bg-indigo-500 px-2 py-1 text-white uppercase text-sm">
+                    Carrito de Compras
+                </span>
+            </div>
+            <h1 class="dark:text-white text-4xl text-center mt-6 font-Pacifico">
+                <i class="fa-solid fa-cart-plus"></i>
+            </h1>                                 
+            <p class="dark:text-gray-400 text-center mt-6 text-lg font-light">
+                Aquí puedes ver los productos que has agregado a tu carrito.
+            </p>
+        </div>
+        <div class="m-4 lg:m-8 sm:mx-40 sm:my-2 lg:mx-20 lg:p-4 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+            <table id="cart-table" class="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md">
+                <thead class="bg-blue-100 dark:bg-gray-700">
+                    <tr>
+                        <!-- He quitado los encabezados de la tabla (th) como solicitaste -->
+                    </tr>
+                </thead>
+                <tbody id="cart-items" class="bg-white dark:bg-gray-800">
+                    <!-- Los productos se agregarán dinámicamente aquí -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9" class="py-2 px-4 border-b border-gray-300 dark:border-gray-600">
+                            <strong id="cart-total">Total: $0.00</strong>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div id="empty-cart-message" class="text-center mt-6 text-lg font-light dark:text-gray-400">
+                No hay ningún producto agregado al carrito.
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-center form-group text-center p-4 gap-4">
+            <a class="bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full flex items-center justify-center" href="{% url 'purcharse:purcharse_list' %}">
+                <i class="fa-solid fa-house"></i> Volver a la tienda
+            </a>
+            <a id="buy-button" class="bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-full flex items-center justify-center" href="#" style="display: none;">
+                <i class="fa-solid fa-shopping-cart"></i> Comprar
+            </a>
+            <a id="statistics-button" class="bg-yellow-700 hover:bg-yellow-800 text-white py-2 px-4 rounded-full flex items-center justify-center" href="{% url 'purcharse:purchase_history' %}">
+                <i class="fas fa-chart-bar"></i> Ver Estadísticas
+            </a>
+        </div>
+    </div>
+</section>  
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const defaultImageUrl = "static/img/default_product.jpg";
+        const cartItemsContainer = document.getElementById('cart-items');
+        const buyButton = document.getElementById('buy-button');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const cartTable = document.getElementById('cart-table');
+        const cartTotalElement = document.getElementById('cart-total');
+
+        function renderCart() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartTable.style.display = 'none';
+                buyButton.style.display = 'none';
+                cartTotalElement.style.display = 'none';
+            } else {
+                emptyCartMessage.style.display = 'none';
+                cartTable.style.display = 'table';
+                buyButton.style.display = 'inline-flex';
+                cartTotalElement.style.display = 'block';
+
+                cart.forEach((item, index) => {
+                    const price = parseFloat(item.price.replace(/[^0-9.-]+/g,"")/100) || 0;
+                    const quantity = parseInt(item.quantity) || 1;
+                    const productRow = document.createElement('tr');
+                    productRow.innerHTML = `
+                        <td class="py-2 px-4 border-b">
+                            <img class="w-24 h-24 object-cover rounded-lg" src="${item.image || defaultImageUrl}" alt="Imagen del producto">
+                        </td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-green-600 dark:text-white">${item.description}</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-green-600 dark:text-white">${item.stock || 'N/A'}</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-green-600 dark:text-white">${item.brand || 'Desconocida'}</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-green-600 dark:text-white">${item.categories || 'No especificada'}</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-green-600 dark:text-white">${item.expiration_date || 'No disponible'}</td>
+                        <td class="py-2 px-4 border-b">
+                            <input type="number" min="1" class="quantity-input w-16 py-1 px-2 text-center text-sm rounded" value="${quantity}" data-index="${index}">
+                        </td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-green-600 dark:text-white">${item.price}</td>
+                        <td class="py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-green-600 dark:text-white">
+                            <button style="background: none; border: none;" data-index="${index}"><i class="fas fa-trash-alt text-red-700 hover:text-red-800"></i></button>
+
+                        </td>
+                    `;
+                    cartItemsContainer.appendChild(productRow);
+
+                    // Calcular el total
+                    total += price * quantity;
+                });
+
+                // Actualizar el total en la interfaz
+                cartTotalElement.className = "py-2 px-4 border-b border-gray-300 dark:border-gray-600 text-green-600 dark:text-white";
+                cartTotalElement.textContent = `Total: $${total.toFixed(2)}`;
+
+                // Añadir eventos a los botones de eliminar
+                document.querySelectorAll('button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeFromCart(index);
+                    });
+                });
+
+                // Añadir eventos a los campos de cantidad
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        let newQuantity = parseInt(this.value);
+                        if (isNaN(newQuantity) || newQuantity < 1) {
+                            newQuantity = 1;
+                        }
+                        updateQuantity(index, newQuantity);
+                    });
+
+                    input.addEventListener('input', function() {
+                        let value = this.value;
+                        value = value.replace(/[^0-9]/g, '');
+                        this.value = value ? Math.max(1, parseInt(value)) : 1;
+                    });
+                });
+            }
+        }
+
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        function updateQuantity(index, newQuantity) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (newQuantity > 0) {
+                cart[index].quantity = newQuantity;
+            } else {
+                cart[index].quantity = 1;
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        function processPurchase() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert('El carrito está vacío. Añade productos antes de comprar.');
+                return;
+            }
+        
+            const currentDate = new Date().toISOString().split('T')[0]; // Formato de fecha: YYYY-MM-DD
+        
+            cart = cart.map(item => ({
+                ...item,
+                quantity: parseInt(item.quantity, 10) || 1,
+                date: currentDate // Añadir la fecha de compra
+            }));
+        
+            // Guardar datos en localStorage para uso posterior
+            localStorage.setItem('purchaseData', JSON.stringify(cart));
+        
+            fetch('{% url "purcharse:process_purchase" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ cart })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    localStorage.removeItem('cart');
+                    renderCart();
+                    alert('Compra realizada exitosamente.');
+                } else {
+                    alert('Error al procesar la compra.');
+                }
+            });
+        }
+
+        buyButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            processPurchase();
+        });
+
+        renderCart();
+    });
+</script>
+<style>
+    /* Cambiar el color de las letras en el td a #b667d6 */
+    #cart-table td {
+        color: #b667d6;
+    }
+
+    /* Cambiar el color de los botones a un tono morado */
+    .form-group a {
+        background-color: #67357b;
+    }
+
+    /* Añadir una línea divisora verticalmente entre precio y cantidad */
+    #cart-table td:nth-child(7) {
+        border-right: 1px solid #c4c3c3;
+    }
+</style>
+{% endblock content %}
+
