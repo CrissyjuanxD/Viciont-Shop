@@ -1,4 +1,6 @@
-#                      VICIONT SHOP
+# VICIONT SHOP
+<img src="https://github.com/CrissyjuanxD/Viciont-Shop/blob/master/static/img/cucho_logof.png" />
+
 # CRUD/ADMINISTRADOR de Ventas Usando Programación Orientada a Objetos
 
 ## Resumen General
