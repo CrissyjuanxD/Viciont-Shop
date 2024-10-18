@@ -9,7 +9,6 @@
     <li>HTML 5: Tecnología de marcado utilizada para estructurar y presentar contenido en la web.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" height="30" alt="html5 logo"  /></li>
     <li>CSS 3: Lenguaje utilizado para definir estilos visuales de documentos escritos en HTML.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" height="30" alt="css3 logo"  /></li>
     <li>JavaScript ES6: Lenguaje de programación utilizado para agregar interactividad y dinamismo a las páginas web.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="30" alt="javascript logo"  /></li>
-    <li>Pandas 1.2: Biblioteca de análisis de datos que proporciona estructuras de datos y herramientas de análisis eficientes.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" height="30" alt="Pandas logo" />
 </li>
     <li>Matplotlib 3.4: Biblioteca para la creación de gráficos estáticos, animados e interactivos en Python.    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg" height="30" alt="Matplotlib logo" />
 </li>
