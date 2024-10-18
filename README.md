@@ -1,5 +1,5 @@
 
-<h1 align="center"> # VICIONT SHOP </h1>
+<h1 align="center"> VICIONT SHOP </h1>
 
 <p align="center">
 <img src="https://github.com/CrissyjuanxD/Viciont-Shop/blob/master/static/img/cucho_logof.png" />
