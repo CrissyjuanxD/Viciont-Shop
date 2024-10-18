@@ -1,3 +1,34 @@
+# VICIONT SHOP
+# CRUD/ADMINISTRADOR de Ventas Usando Programación Orientada a Objetos
+
+## Resumen General
+Este proyecto tiene como objetivo crear un sistema completo para gestionar ventas aplicando la programación orientada a objetos (POO) en Python. El sistema está diseñado para que las empresas puedan registrar, gestionar y analizar eficientemente toda la información vinculada a sus procesos de ventas, como productos, clientes, facturas y reportes. Además de mejorar la gestión interna, este sistema proporciona herramientas de análisis para apoyar en la toma de decisiones.
+
+## Finalidad del Sistema
+El propósito del sistema de administración de ventas es unificar y simplificar las operaciones comerciales de las empresas. Con una solución integrada, se busca:
+
+- Generar reportes precisos y en tiempo oportuno para respaldar decisiones estratégicas.
+- Disminuir la carga administrativa al automatizar tareas repetitivas.
+- Facilitar la gestión de relaciones con clientes al mantener registros detallados.
+- Aumentar la precisión en el control y administración de inventarios.
+
+## Objetivos Principales
+- **Gestión de Productos**: Ofrecer un módulo sólido para registrar, actualizar y eliminar productos, así como consultar el catálogo completo.
+- **Gestión de Clientes**: Habilitar la gestión de registro, actualización y eliminación de clientes, con un historial detallado de sus compras.
+- **Gestión de Facturas**: Simplificar la creación de facturas, agregando productos, calculando totales de forma automática y generando facturas en PDF.
+- **Reportes y Análisis**: Generar reportes y análisis de ventas con diversos criterios (tiempo, producto, cliente, etc.), obteniendo información clave.
+- **Interfaz Gráfica de Usuario (GUI)**: Desarrollar una interfaz intuitiva y amigable mediante PyQt/PySide, que permita una fácil interacción con el sistema.
+
+## Diseño y Arquitectura
+El sistema está diseñado bajo los principios de programación orientada a objetos, con una estructura modular y escalable. Los módulos y clases principales son:
+
+- **Producto**: Contiene la información y comportamiento de los productos, como nombre, descripción, precio y stock.
+- **Cliente**: Representa los datos y acciones relacionadas con los clientes, incluyendo nombre, dirección e historial de compras.
+- **Factura**: Gestiona la creación, cálculo y emisión de facturas, añadiendo productos y calculando los totales.
+- **Reportes**: Genera análisis e informes de ventas basados en la información del sistema.
+- **GUI**: Implementa la interfaz gráfica usando PyQt/PySide, integrando todas las funcionalidades del sistema.
+
+
 ## Tecnologías Utilizadas
 <ul>
     <li>Programación Orientada a Objetos (POO): Paradigma de programación utilizado para estructurar y organizar el código del sistema.</li>
