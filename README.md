@@ -1,4 +1,4 @@
-# VICIONT SHOP
+#                      VICIONT SHOP
 # CRUD/ADMINISTRADOR de Ventas Usando Programación Orientada a Objetos
 
 ## Resumen General
