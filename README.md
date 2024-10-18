@@ -1,9 +1,8 @@
 <div style="text-align: center;">
 # VICIONT SHOP
 <img src="https://github.com/CrissyjuanxD/Viciont-Shop/blob/master/static/img/cucho_logof.png" />
-
-# CRUD/ADMINISTRADOR de Ventas Usando Programación Orientada a Objetos
 </div>
+# CRUD/ADMINISTRADOR de Ventas Usando Programación Orientada a Objetos
 
 ## Resumen General
 Este proyecto tiene como objetivo crear un sistema completo para gestionar ventas aplicando la programación orientada a objetos (POO) en Python. El sistema está diseñado para que las empresas puedan registrar, gestionar y analizar eficientemente toda la información vinculada a sus procesos de ventas, como productos, clientes, facturas y reportes. Además de mejorar la gestión interna, este sistema proporciona herramientas de análisis para apoyar en la toma de decisiones.
