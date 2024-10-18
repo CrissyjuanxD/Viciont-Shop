@@ -1,8 +1,9 @@
 
-# VICIONT SHOP
-<div style="text-align: center;">
+<h1 align="center"> # VICIONT SHOP </h1>
+
+<p align="center">
 <img src="https://github.com/CrissyjuanxD/Viciont-Shop/blob/master/static/img/cucho_logof.png" />
-</div>
+</p>
 
 # CRUD/ADMINISTRADOR de Ventas Usando Programación Orientada a Objetos
 
